@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders</title>
+    <title>Transaction information</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="./index.css">
@@ -31,14 +31,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item fs-5">
-                        <a class="nav-link active cc-active-link" aria-current="page"
-                            href="customersOrderDashboard.php">Orders</a>
+                        <a class="nav-link active" aria-current="page"
+                            href="./adminProductsDashboard.php">Products</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item fs-5">
-                        <a class="nav-link active" aria-current="page" href="customersPlaceOrderDashboard.php">Place an
-                            order</a>
+                        <a class="nav-link active cc-active-link" aria-current="page" href="./adminTransactionInformation.php">Transaction Information</a>
                     </li>
                 </ul>
             </div>
@@ -50,33 +49,14 @@
         <p>You have no orders yet. Order now!</p>
     </div>
     <div class="cc-div-styles cc-div1 rounded-4 shadow-lg">
+        <p><b>1. Zors</b></p>
         <p>Popberry pie 3x</p>
         <br>
         <p>Status: To ship</p>
 
-        <div> <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#orderModal">
-                Cancel order
-            </button></div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" data-bs-backdrop="static" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="orderModalLabel">Cancel Order</h1>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure to cancel the order?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
