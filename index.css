@@ -1,0 +1,40 @@
+body {
+    background-color: #ede8f5;
+}
+
+.nav-link {
+    position: relative;
+}
+
+.nav-link::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 5px;
+    background-color: black;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.3s ease-in-out;
+    border-radius: 100px;
+}
+
+.cc-active-link::before {
+    width: 90%;
+}
+
+.nav-link:hover::before {
+    width: 90%;
+}
+
+.cc-navbar {
+    background: #7091E6 !important;
+}
+
+.cc-div-styles {
+    background: #8697c4;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 2%;
+}
+/* Main page css */
