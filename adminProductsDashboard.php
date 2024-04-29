@@ -72,26 +72,53 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="orderModalLabel">Order</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h1 class="modal-title fs-5" id="orderModalLabel">Add new product</h1>
                 </div>
                 <div class="modal-body">
-                    <p>Amount: </p>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-secondary" onclick="decrement()">-</button>
-                        <input type="text" class="form-control" id="counter" value="1" readonly>
-                        <button type="button" class="btn btn-secondary" onclick="increment()">+</button>
-                    </div>
+
+                    <form id="myForm" action="./Forms/addProducts.php" method="post">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Product name:</label>
+                            <input name="name" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Insert text">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Product description:</label>
+                            <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="5" placeholder="Text goes here..." style="resize: none;"></textarea>
+                        </div>
+
+
+                        <div class="d-flex justify-content-evenly">
+                            <div>
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Quantity:</label>
+                                    <input name="quantity" type="number" class="form-control" id="exampleFormControlInput1" placeholder="Product quantity">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Product price:</label>
+                                    <input name="price" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Product price">
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button id="submitButton" type="submit" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function() {
+            document.getElementById('myForm').submit();
+        });
+    </script>
 </body>
 
 </html>
