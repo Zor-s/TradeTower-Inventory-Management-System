@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2024 at 10:39 AM
+-- Generation Time: Apr 29, 2024 at 05:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -22,6 +22,16 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `tradetower` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `tradetower`;
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addProducts` (IN `name` VARCHAR(255), IN `description` VARCHAR(255), IN `quantity` INT, IN `price` DECIMAL(10,2))   BEGIN
+  INSERT INTO products (`name`, `description`, `quantity`, `price`) VALUES (name, description, quantity, price);
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -76,30 +86,13 @@ CREATE TABLE `products` (
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `supplierproduct`
+-- Dumping data for table `products`
 --
 
-CREATE TABLE `supplierproduct` (
-  `supplier_product_id` int(11) NOT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `supplier_id` int(11) DEFAULT NULL,
-  `is_supplying` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `suppliers`
---
-
-CREATE TABLE `suppliers` (
-  `supplier_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `information` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `products` (`product_id`, `name`, `description`, `quantity`, `price`) VALUES
+(1, 'scarrot', 'yum!', 32, 33.50),
+(2, 'asd', 'asd', 12, 4.60);
 
 -- --------------------------------------------------------
 
@@ -146,20 +139,6 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`product_id`);
 
 --
--- Indexes for table `supplierproduct`
---
-ALTER TABLE `supplierproduct`
-  ADD PRIMARY KEY (`supplier_product_id`),
-  ADD KEY `product_id` (`product_id`),
-  ADD KEY `supplier_id` (`supplier_id`);
-
---
--- Indexes for table `suppliers`
---
-ALTER TABLE `suppliers`
-  ADD PRIMARY KEY (`supplier_id`);
-
---
 -- Indexes for table `transaction`
 --
 ALTER TABLE `transaction`
@@ -193,19 +172,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `supplierproduct`
---
-ALTER TABLE `supplierproduct`
-  MODIFY `supplier_product_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `suppliers`
---
-ALTER TABLE `suppliers`
-  MODIFY `supplier_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `transaction`
@@ -223,13 +190,6 @@ ALTER TABLE `transaction`
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
   ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
-
---
--- Constraints for table `supplierproduct`
---
-ALTER TABLE `supplierproduct`
-  ADD CONSTRAINT `supplierproduct_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
-  ADD CONSTRAINT `supplierproduct_ibfk_2` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`supplier_id`);
 
 --
 -- Constraints for table `transaction`

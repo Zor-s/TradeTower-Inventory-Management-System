@@ -53,9 +53,13 @@
         <p>Popberry pie 3x</p>
         <br>
         <p>Status: To ship</p>
-
     </div>
 
+<?php 
+include './connector.php';
+$DB = new connector();
+
+?>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
