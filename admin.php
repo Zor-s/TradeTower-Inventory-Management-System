@@ -1,3 +1,7 @@
+<?php
+include "./connector.php";
+$connector = new connector();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -90,75 +94,122 @@
                 </div>
                 <div class="col">
                   <label for="productPrice" class="form-label">Price</label>
-                  <input name="price" type="text" class="form-control" id="productPrice" pattern="^\d*(\.\d{0,2})?$" required />
+                  <input name="price" type="number" class="form-control" id="productPrice" pattern="^\d*(\.\d{0,2})?$" required />
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-success">
                 Add Product
               </button>
             </form>
           </div>
         </div>
       </div>
-      <div class="row mt-4">
-        <div class="col-lg-12">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="inventoryTableBody">
-              <!-- Inventory items will be dynamically added here -->
-            </tbody>
-          </table>
+
+      <div class="container mt-5 table-responsive">
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+
+
+            // SQL query to select all data from the table
+            $sql = "SELECT product_id, name, description, quantity, price FROM products";
+            $result = $connector->conn->query($sql);
+
+            // Check if there are results
+            if ($result->num_rows > 0) {
+              // Output data of each row
+              while ($row = $result->fetch_assoc()) {
+                echo "<tr>
+                                <th scope=\"row\">" . $row["product_id"] . "</th>
+                                <td>" . $row["name"] . "</td>
+                                <td>" . $row["description"] . "</td>
+                                <td>" . $row["quantity"] . "</td>
+                                <td>" . $row["price"] . "</td>
+                                <td>
+
+
+                                <div class=\"d-flex justify-content-start\">
+                                <form style=\"margin-right: 10px;\" action='editProduct.php' method='post'>
+                                    <input type='hidden' name='product_id' value='" . $row["product_id"] . "'>
+                                    <button type='submit' class='btn btn-primary btn-sm'>Edit</button>
+                                </form>
+                            
+                                <form action='./Forms/deleteProducts.php' method='post'>
+                                    <input type='hidden' name='product_id' value='" . $row["product_id"] . "'>
+                                    <button type='submit' class='btn btn-danger btn-sm'>Delete</button>
+                                </form>
+                            </div>
+                            
+                                
+
+                                    </td>
+                              </tr>";
+              }
+            } else {
+              echo "<tr><td colspan='5'>No products found</td></tr>";
+            }
+
+
+            ?>
+          </tbody>
+        </table>
+
+
+        <div class="row mt-4 d-flex justify-content-center">
+          <div class="col-lg-6">
+            <div class="colored-container">
+              <h2 class="mt-5 mb-4">Available Stocks</h2>
+              <h4>Total: <span id="availableStocks">0</span></h4>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="colored-container">
+              <h2 class="mt-5 mb-4">Total Products</h2>
+              <h4>Total: <span id="totalProducts">0</span></h4>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Modal for Editing Item -->
-      <div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="editItemModalLabel">Edit Item</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form id="editItemForm">
-                <input type="hidden" id="editItemId" />
-                <div class="form-group">
-                  <label for="editItemName">Item Name:</label>
-                  <input type="text" class="form-control" id="editItemName" required />
-                </div>
-                <div class="form-group">
-                  <label for="editItemQuantity">Item Quantity:</label>
-                  <input type="number" class="form-control" id="editItemQuantity" required />
-                </div>
-                <button type="submit" class="btn btn-primary">
-                  Save Changes
-                </button>
-              </form>
-            </div>
-          </div>
+  <!-- Modal for Editing Item -->
+  <div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editItemModalLabel">Edit Item</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-      </div>
-
-      <div class="row mt-4">
-        <div class="col-lg-6">
-          <div class="colored-container">
-            <h2 class="mt-5 mb-4">Available Stocks</h2>
-            <h4>Total: <span id="availableStocks">0</span></h4>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="colored-container">
-            <h2 class="mt-5 mb-4">Total Products</h2>
-            <h4>Total: <span id="totalProducts">0</span></h4>
-          </div>
+        <div class="modal-body">
+          <form id="editItemForm">
+            <input type="hidden" id="editItemId" />
+            <div class="form-group">
+              <label for="editItemName">Item Name:</label>
+              <input type="text" class="form-control" id="editItemName" required />
+            </div>
+            <div class="form-group">
+              <label for="editItemQuantity">Item Quantity:</label>
+              <input type="number" class="form-control" id="editItemQuantity" required />
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Save Changes
+            </button>
+          </form>
         </div>
       </div>
     </div>
@@ -168,141 +219,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-  <script>
-    // Sample inventory data
-    let inventory = [{
-        id: 1,
-        name: "Item 1",
-        quantity: 10
-      },
-      {
-        id: 2,
-        name: "Item 2",
-        quantity: 15
-      },
-      {
-        id: 3,
-        name: "Item 3",
-        quantity: 20
-      },
-    ];
-
-    // Function to render inventory items
-    function renderInventory() {
-      const inventoryTableBody =
-        document.getElementById("inventoryTableBody");
-      inventoryTableBody.innerHTML = "";
-
-      inventory.forEach((item) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>${item.quantity}</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning edit-btn" data-id="${item.id}">Edit</button>
-                        <button class="btn btn-sm btn-danger delete-btn" data-id="${item.id}">Delete</button>
-                    </td>
-                `;
-        inventoryTableBody.appendChild(row);
-      });
-
-      updateStocksAndProductCounters();
-    }
-
-    // Function to update stocks and product counters
-    function updateStocksAndProductCounters() {
-      const availableStocks = inventory.reduce(
-        (total, item) => total + item.quantity,
-        0
-      );
-      document.getElementById("availableStocks").innerText = availableStocks;
-
-      const totalProducts = inventory.length;
-      document.getElementById("totalProducts").innerText = totalProducts;
-    }
-
-    // Add item form submit event
-    document
-      .getElementById("addItemForm")
-      .addEventListener("submit", function(event) {
-        event.preventDefault();
-        const itemName = document.getElementById("itemName").value;
-        const itemQuantity = parseInt(
-          document.getElementById("itemQuantity").value
-        );
-
-        if (itemName && !isNaN(itemQuantity)) {
-          const newItem = {
-            id: inventory.length + 1,
-            name: itemName,
-            quantity: itemQuantity,
-          };
-          inventory.push(newItem);
-          renderInventory();
-          document.getElementById("itemName").value = "";
-          document.getElementById("itemQuantity").value = "";
-        }
-      });
-
-    // Edit item form submit event
-    document
-      .getElementById("editItemForm")
-      .addEventListener("submit", function(event) {
-        event.preventDefault();
-        const itemId = parseInt(document.getElementById("editItemId").value);
-        const itemName = document.getElementById("editItemName").value;
-        const itemQuantity = parseInt(
-          document.getElementById("editItemQuantity").value
-        );
-
-        if (itemId && itemName && !isNaN(itemQuantity)) {
-          const itemIndex = inventory.findIndex((item) => item.id === itemId);
-          if (itemIndex !== -1) {
-            inventory[itemIndex].name = itemName;
-            inventory[itemIndex].quantity = itemQuantity;
-            renderInventory();
-            $("#editItemModal").modal("hide");
-          }
-        }
-      });
-
-    // Editbutton click event
-    document
-      .getElementById("inventoryTableBody")
-      .addEventListener("click", function(event) {
-        if (event.target.classList.contains("edit-btn")) {
-          const itemId = parseInt(event.target.getAttribute("data-id"));
-          const selectedItem = inventory.find((item) => item.id === itemId);
-
-          document.getElementById("editItemId").value = selectedItem.id;
-          document.getElementById("editItemName").value = selectedItem.name;
-          document.getElementById("editItemQuantity").value =
-            selectedItem.quantity;
-
-          $("#editItemModal").modal("show");
-        }
-      });
-
-    // Delete button click event
-    document
-      .getElementById("inventoryTableBody")
-      .addEventListener("click", function(event) {
-        if (event.target.classList.contains("delete-btn")) {
-          const itemId = parseInt(event.target.getAttribute("data-id"));
-          const itemIndex = inventory.findIndex((item) => item.id === itemId);
-          if (itemIndex !== -1) {
-            inventory.splice(itemIndex, 1);
-            renderInventory();
-          }
-        }
-      });
-
-    // Initial render
-    renderInventory();
-  </script>
 
 
-<script></script>
+  <script></script>
 </body>
 
 </html>
