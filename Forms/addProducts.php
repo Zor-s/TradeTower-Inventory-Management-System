@@ -12,3 +12,7 @@ $sql = "CALL addProducts('$name', '$description', $quantity, $price);";
 
 
 mysqli_query($connector->conn, $sql);
+
+// Redirect back to the HTML page with a success message
+echo "<script>alert('Item added successfully');</script>";
+echo "<script>window.location.href='../admin.php';</script>";
