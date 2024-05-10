@@ -9,7 +9,9 @@ $connector = new connector();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard</title>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" /> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
   <style>
     body {
       background: linear-gradient(135deg, #007bff, #42d0ff);
@@ -107,7 +109,7 @@ $connector = new connector();
 
       <div class="container mt-5 table-responsive">
 
-        <table class="table">
+        <table class="table table-hover table-striped">
           <thead>
             <tr>
               <th scope="col">No.</th>
@@ -123,7 +125,7 @@ $connector = new connector();
 
 
             // SQL query to select all data from the table
-            $sql = "SELECT product_id, name, description, quantity, price FROM products";
+            $sql    = "SELECT product_id, name, description, quantity, price FROM products";
             $result = $connector->conn->query($sql);
 
             // Check if there are results
@@ -140,11 +142,11 @@ $connector = new connector();
 
 
                                 <div class=\"d-flex justify-content-start\">
-                                <form style=\"margin-right: 10px;\" action='editProduct.php' method='post'>
-                                    <input type='hidden' name='product_id' value='" . $row["product_id"] . "'>
-                                    <button type='submit' class='btn btn-primary btn-sm'>Edit</button>
-                                </form>
-                            
+
+                                <button onclick='getValue(".$row["product_id"].")' class='btn btn-primary btn-sm' type=\"button\" data-bs-toggle=\"modal\" data-bs-target=\"#editModal\">
+                                   Edit
+                                </button>
+                                                            
                                 <form action='./Forms/deleteProducts.php' method='post'>
                                     <input type='hidden' name='product_id' value='" . $row["product_id"] . "'>
                                     <button type='submit' class='btn btn-danger btn-sm'>Delete</button>
@@ -157,7 +159,7 @@ $connector = new connector();
                               </tr>";
               }
             } else {
-              echo "<tr><td colspan='5'>No products found</td></tr>";
+              echo "<tr><td class=\"text-center\"colspan='6'>No products found</td></tr>";
             }
 
 
@@ -185,43 +187,88 @@ $connector = new connector();
     </div>
   </div>
 
-  <!-- Modal for Editing Item -->
-  <div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="editItemModalLabel">Edit Item</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <h5 class="modal-title" id="editModalLabel">Product Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="editItemForm">
-            <input type="hidden" id="editItemId" />
-            <div class="form-group">
-              <label for="editItemName">Item Name:</label>
-              <input type="text" class="form-control" id="editItemName" required />
+
+
+
+          <form id="updateForm" method="post" action="./Forms/updateProducts.php">
+          <input type="hidden" id="hiddenInput" name="product_id" value="">
+            <div class="mb-3">
+              <label for="productName2" class="form-label">Name</label>
+              <input name="name" type="text" class="form-control" id="productName2" maxlength="255" required />
             </div>
-            <div class="form-group">
-              <label for="editItemQuantity">Item Quantity:</label>
-              <input type="number" class="form-control" id="editItemQuantity" required />
+            <div class="mb-3">
+              <label for="productDescription2" class="form-label">Description</label>
+              <textarea name="description" class="form-control" id="productDescription2" rows="3" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">
-              Save Changes
-            </button>
+            <div class="row g-3 mb-3">
+              <div class="col">
+                <label for="productQuantity2" class="form-label">Quantity</label>
+                <input name="quantity" type="number" class="form-control" id="productQuantity2" required />
+              </div>
+              <div class="col">
+                <label for="productPrice2" class="form-label">Price</label>
+                <input name="price" type="number" class="form-control" id="productPrice2" pattern="^\d*(\.\d{0,2})?$" required />
+              </div>
+            </div>
           </form>
+
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button onclick="submitForm()" type="submit" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
   </div>
-
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+
+  <script>
+
+    function getValue(value) {
+      document.getElementById('hiddenInput').value = value; // Set the value to the hidden input
+    }
+    // Vanilla JavaScript equivalent
+document.addEventListener('click', function(event) {
+  if (event.target.dataset.toggle === 'modal') {
+    var value = event.target.dataset.productid; // Get the value from the button
+    document.getElementById('hiddenInput').value = value; // Set the value to the hidden input
+  }
+});
 
 
 
-  <script></script>
+function submitForm() {
+    // Get the form element by its ID
+    const form = document.getElementById('updateForm'); // Replace 'myForm' with your actual form ID
+
+    // Perform any necessary validation here
+    // For example, check if required fields are filled out
+
+    // Submit the form
+    form.submit();
+}
+
+
+  </script>
 </body>
 
 </html>
