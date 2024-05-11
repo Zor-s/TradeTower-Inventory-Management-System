@@ -1,6 +1,8 @@
 <?php
 include "./connector.php";
 $connector = new connector();
+$connector2 = new connector();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -125,7 +127,7 @@ $connector = new connector();
 
 
             // SQL query to select all data from the table
-            $sql    = "SELECT product_id, name, description, quantity, price FROM products";
+            $sql    = "SELECT * FROM viewProducts;";
             $result = $connector->conn->query($sql);
 
             // Check if there are results
@@ -137,13 +139,13 @@ $connector = new connector();
                                 <td>" . $row["name"] . "</td>
                                 <td>" . $row["description"] . "</td>
                                 <td>" . $row["quantity"] . "</td>
-                                <td>" . $row["price"] . "</td>
+                                <td>$ " . $row["price"] . "</td>
                                 <td>
 
 
                                 <div class=\"d-flex justify-content-start\">
 
-                                <button onclick='getValue(".$row["product_id"].")' class='btn btn-primary btn-sm' type=\"button\" data-bs-toggle=\"modal\" data-bs-target=\"#editModal\">
+                                <button style=\"margin-right: 10px;\" onclick='getValue(\"" . $row["product_id"] . "\",\"" . $row["name"] . "\",\"" . $row["description"] . "\",\"" . $row["quantity"] . "\",\"" . $row["price"] . "\")' class='btn btn-primary btn-sm' type=\"button\" data-bs-toggle=\"modal\" data-bs-target=\"#editModal\">
                                    Edit
                                 </button>
                                                             
@@ -171,15 +173,57 @@ $connector = new connector();
         <div class="row mt-4 d-flex justify-content-center">
           <div class="col-lg-6">
             <div class="colored-container">
-              <h2 class="mt-5 mb-4">Available Stocks</h2>
-              <h4>Total: <span id="availableStocks">0</span></h4>
+              <h2 class="mt-5 mb-4">Total Products:</h2>
+              <h4> <?php
+
+                    // SQL query to select all data from the table
+                    $sql    = "CALL totalQuantity();";
+                    $result = $connector->conn->query($sql);
+
+                    // Check if there are results
+                    if ($result->num_rows > 0) {
+
+                      while ($row = $result->fetch_assoc()) {
+                        if ($row["TotalQuantity"] === null) {
+                          echo "0";
+                          break;
+                        }
+                        echo $row["TotalQuantity"];
+                      }
+                    } 
+
+
+                    ?>
+              </h4>
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="colored-container">
-              <h2 class="mt-5 mb-4">Total Products</h2>
-              <h4>Total: <span id="totalProducts">0</span></h4>
+              <h2 class="mt-5 mb-4">Total Price</h2>
+              <h4>
+                <?php
+
+                // SQL query to select all data from the table
+                $sql    = "CALL totalPrice();";
+                $result = $connector2->conn->query($sql);
+
+                // Check if there are results
+                if ($result->num_rows > 0) {
+                  // Output data of each row
+                  while ($row = $result->fetch_assoc()) {
+                    if ($row["total"] === null) {
+                      echo "$ 0";
+                      break;
+                    }
+                    echo"$ ". $row["total"];
+                  }
+                } else {
+                  echo "0";
+                }
+
+                ?>
+              </h4>
             </div>
           </div>
         </div>
@@ -202,7 +246,7 @@ $connector = new connector();
 
 
           <form id="updateForm" method="post" action="./Forms/updateProducts.php">
-          <input type="hidden" id="hiddenInput" name="product_id" value="">
+            <input type="hidden" id="hiddenInput" name="product_id" value="">
             <div class="mb-3">
               <label for="productName2" class="form-label">Name</label>
               <input name="name" type="text" class="form-control" id="productName2" maxlength="255" required />
@@ -242,32 +286,23 @@ $connector = new connector();
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 
   <script>
-
-    function getValue(value) {
-      document.getElementById('hiddenInput').value = value; // Set the value to the hidden input
+    function getValue(product_id, name, description, quantity, price) {
+      document.getElementById('hiddenInput').value = product_id;
+      document.getElementById('productName2').value = name;
+      document.getElementById('productDescription2').value = description;
+      document.getElementById('productQuantity2').value = quantity;
+      document.getElementById('productPrice2').value = price;
     }
-    // Vanilla JavaScript equivalent
-document.addEventListener('click', function(event) {
-  if (event.target.dataset.toggle === 'modal') {
-    var value = event.target.dataset.productid; // Get the value from the button
-    document.getElementById('hiddenInput').value = value; // Set the value to the hidden input
-  }
-});
 
 
 
-function submitForm() {
-    // Get the form element by its ID
-    const form = document.getElementById('updateForm'); // Replace 'myForm' with your actual form ID
 
-    // Perform any necessary validation here
-    // For example, check if required fields are filled out
-
-    // Submit the form
-    form.submit();
-}
+    function submitForm() {
+      const form = document.getElementById('updateForm');
 
 
+      form.submit();
+    }
   </script>
 </body>
 

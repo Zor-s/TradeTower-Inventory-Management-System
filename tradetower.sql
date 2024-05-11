@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2024 at 05:01 PM
+-- Generation Time: May 11, 2024 at 06:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,6 +29,30 @@ DELIMITER $$
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addProducts` (IN `name` VARCHAR(255), IN `description` VARCHAR(255), IN `quantity` INT, IN `price` DECIMAL(10,2))   BEGIN
   INSERT INTO products (`name`, `description`, `quantity`, `price`) VALUES (name, description, quantity, price);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `removeProducts` (IN `itemID` INT)   BEGIN
+    DELETE FROM products WHERE product_id = itemID;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `totalPrice` ()   BEGIN
+    SELECT SUM(quantity * price) as total FROM products;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `totalQuantity` ()   BEGIN
+    SELECT SUM(quantity) AS TotalQuantity
+    FROM products;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProducts` (IN `p_product_id` INT, IN `p_name` VARCHAR(255), IN `p_description` TEXT, IN `p_quantity` INT, IN `p_price` DECIMAL(10,2))   BEGIN
+    UPDATE products
+    SET
+        name = p_name,
+        description = p_description,
+        quantity = p_quantity,
+        price = p_price
+    WHERE
+        product_id = p_product_id;
 END$$
 
 DELIMITER ;
@@ -86,14 +110,6 @@ CREATE TABLE `products` (
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `products`
---
-
-INSERT INTO `products` (`product_id`, `name`, `description`, `quantity`, `price`) VALUES
-(1, 'scarrot', 'yum!', 32, 33.50),
-(2, 'asd', 'asd', 12, 4.60);
-
 -- --------------------------------------------------------
 
 --
@@ -107,6 +123,29 @@ CREATE TABLE `transaction` (
   `status` varchar(50) DEFAULT NULL,
   `orders_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `viewproducts`
+-- (See below for the actual view)
+--
+CREATE TABLE `viewproducts` (
+`product_id` int(11)
+,`name` varchar(255)
+,`description` text
+,`quantity` int(11)
+,`price` decimal(10,2)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `viewproducts`
+--
+DROP TABLE IF EXISTS `viewproducts`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `viewproducts`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`name` AS `name`, `products`.`description` AS `description`, `products`.`quantity` AS `quantity`, `products`.`price` AS `price` FROM `products` ;
 
 --
 -- Indexes for dumped tables
@@ -172,7 +211,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `transaction`
