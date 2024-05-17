@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="Css/bootstrap.min.css">
     <link rel="stylesheet" href="Css/all.min.css">
     <link rel="stylesheet" href="Css/style.css">
+    
     <style>
         body {
             background: linear-gradient(135deg, #007bff, #42d0ff);
