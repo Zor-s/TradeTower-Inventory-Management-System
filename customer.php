@@ -1,6 +1,7 @@
 <?php
 include "./connector.php";
 $connector = new connector();
+session_start();
 
 ?>
 
@@ -156,7 +157,7 @@ $connector = new connector();
                     <div class=\"col-6\">
                       <div class=\"input-group\">
                         <button class=\"btn btn-outline-secondary \" type=\"button\" id=\"decrement-btn" . $row["product_id"] . "\">-</button>
-                        <input value='0' min='0' max='" . $row["quantity"] . "' type=\"text\" class=\"form-control inputGroup\" value=\"0\" id=\"counter-input" . $row["product_id"] . "\">
+                        <input value='0' min='0' max='" . $row["quantity"] . "' type=\"text\" class=\"form-control inputGroup\" value=\"0\" id=\"".$row["product_id"]."\">
                         <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"increment-btn" . $row["product_id"] . "\">+</button>
                       </div>
                     </div>
@@ -169,11 +170,11 @@ $connector = new connector();
 
               <script>
               document.getElementById('increment-btn" . $row["product_id"] . "').addEventListener('click', function() {
-                document.getElementById('counter-input" . $row["product_id"] . "').value = parseInt(document.getElementById('counter-input" . $row["product_id"] . "').value) + 1;
+                document.getElementById('".$row["product_id"]."').value = parseInt(document.getElementById('".$row["product_id"]."').value) + 1;
               });
           
               document.getElementById('decrement-btn" . $row["product_id"] . "').addEventListener('click', function() {
-                document.getElementById('counter-input" . $row["product_id"] . "').value = parseInt(document.getElementById('counter-input" . $row["product_id"] . "').value) - 1;
+                document.getElementById('".$row["product_id"]."').value = parseInt(document.getElementById('".$row["product_id"]."').value) - 1;
               });
             </script>
                 
@@ -295,7 +296,7 @@ $connector = new connector();
     });
   </script> -->
   <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script> -->
-
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 
   <script>
@@ -309,13 +310,30 @@ $connector = new connector();
 
       // Loop through the inputs and push their values into the array
       inputs.forEach(function(input) {
-        values.push(input.value);
-        productID.push(input.id);
+        if (input.value > 0) {
+          values.push(input.value);
+          productID.push(input.id);
 
+        }
+      });
+      var valuesString = JSON.stringify(values);
+      var productIDString = JSON.stringify(productID);
+
+      $.ajax({
+        url: './php/addOrders.php',
+        type: 'post',
+        data: {
+          valuesString: valuesString,
+          productIDString: productIDString,
+        },
+        success: function(response) {
+          // console.log(response);
+        }
       });
 
+
       // Print the values
-      console.log(productID + values);
+      // console.log(productID + values);
     }
   </script>
 </body>
