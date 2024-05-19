@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2024 at 04:31 PM
+-- Generation Time: May 19, 2024 at 05:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,6 +29,22 @@ DELIMITER $$
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addProducts` (IN `name` VARCHAR(255), IN `description` VARCHAR(255), IN `quantity` INT, IN `price` DECIMAL(10,2))   BEGIN
   INSERT INTO products (`name`, `description`, `quantity`, `price`) VALUES (name, description, quantity, price);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `joinedOrdersAndProducts` (IN `customer_id` INT)   BEGIN
+    SELECT 
+    	p.name,
+        p.price,
+        o.quantity, 
+        o.Subtotal
+    FROM 
+        orders o
+    INNER JOIN 
+        products p 
+    ON 
+        o.product_id = p.product_id
+    WHERE 
+        o.customer_id = customer_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `removeProducts` (IN `itemID` INT)   BEGIN
@@ -88,8 +104,8 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`customer_id`, `name`, `email`, `username`, `password`) VALUES
-(8, 'asd', 'asd@asd.asd', 'asd', '$2y$10$EXUuONs5pmBaLInepxuH3ORXImOegRB8CZfB9I9GZP1IUTxQAn60W'),
-(9, 'asd', 'asd@asd.asd', 'asd', '$2y$10$EXUuONs5pmBaLInepxuH3ORXImOegRB8CZfB9I9GZP1IUTxQAn60W');
+(9, 'asd', 'asd@asd.asd', 'asd', '$2y$10$EXUuONs5pmBaLInepxuH3ORXImOegRB8CZfB9I9GZP1IUTxQAn60W'),
+(10, 'asds', 'asd@asd.asd', 'asd', '$2y$10$EXUuONs5pmBaLInepxuH3ORXImOegRB8CZfB9I9GZP1IUTxQAn60W');
 
 -- --------------------------------------------------------
 
@@ -111,7 +127,7 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`orders_id`, `customer_id`, `quantity`, `product_id`, `Subtotal`) VALUES
 (44, 9, 1, 9, 0.00),
-(45, 9, 1, 10, 0.00),
+(45, 10, 1, 10, 0.00),
 (46, 9, 1, 11, 0.00),
 (47, 9, 3, 9, 87.00),
 (48, 9, 1, 9, 29.00);
@@ -242,7 +258,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `orders`
