@@ -157,7 +157,7 @@ session_start();
                     <div class=\"col-6\">
                       <div class=\"input-group\">
                         <button class=\"btn btn-outline-secondary \" type=\"button\" id=\"decrement-btn" . $row["product_id"] . "\">-</button>
-                        <input value='0' min='0' max='" . $row["quantity"] . "' type=\"text\" class=\"form-control inputGroup\" value=\"0\" id=\"".$row["product_id"]."\">
+                        <input value='0' min='0' max='" . $row["quantity"] . "' type=\"text\" class=\"form-control inputGroup\" value=\"0\" id=\"" . $row["product_id"] . "\">
                         <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"increment-btn" . $row["product_id"] . "\">+</button>
                       </div>
                     </div>
@@ -170,11 +170,11 @@ session_start();
 
               <script>
               document.getElementById('increment-btn" . $row["product_id"] . "').addEventListener('click', function() {
-                document.getElementById('".$row["product_id"]."').value = parseInt(document.getElementById('".$row["product_id"]."').value) + 1;
+                document.getElementById('" . $row["product_id"] . "').value = parseInt(document.getElementById('" . $row["product_id"] . "').value) + 1;
               });
           
               document.getElementById('decrement-btn" . $row["product_id"] . "').addEventListener('click', function() {
-                document.getElementById('".$row["product_id"]."').value = parseInt(document.getElementById('".$row["product_id"]."').value) - 1;
+                document.getElementById('" . $row["product_id"] . "').value = parseInt(document.getElementById('" . $row["product_id"] . "').value) - 1;
               });
             </script>
                 
@@ -328,7 +328,14 @@ session_start();
         },
         success: function(response) {
           // console.log(response);
+          alert('purchase successful');
+          window.location.href = './customer.php';
+        },
+        error: function(xhr, status, error) {
+          // Handle error
+          console.log('Error:', xhr.responseText);
         }
+
       });
 
 
