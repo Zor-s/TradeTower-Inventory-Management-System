@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2024 at 06:12 PM
+-- Generation Time: May 19, 2024 at 04:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -83,6 +83,14 @@ CREATE TABLE `customers` (
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`customer_id`, `name`, `email`, `username`, `password`) VALUES
+(8, 'asd', 'asd@asd.asd', 'asd', '$2y$10$EXUuONs5pmBaLInepxuH3ORXImOegRB8CZfB9I9GZP1IUTxQAn60W'),
+(9, 'asd', 'asd@asd.asd', 'asd', '$2y$10$EXUuONs5pmBaLInepxuH3ORXImOegRB8CZfB9I9GZP1IUTxQAn60W');
+
 -- --------------------------------------------------------
 
 --
@@ -93,8 +101,34 @@ CREATE TABLE `orders` (
   `orders_id` int(11) NOT NULL,
   `customer_id` int(11) DEFAULT NULL,
   `quantity` int(11) NOT NULL,
-  `product_id` int(11) DEFAULT NULL
+  `product_id` int(11) DEFAULT NULL,
+  `Subtotal` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`orders_id`, `customer_id`, `quantity`, `product_id`, `Subtotal`) VALUES
+(44, 9, 1, 9, 0.00),
+(45, 9, 1, 10, 0.00),
+(46, 9, 1, 11, 0.00),
+(47, 9, 3, 9, 87.00),
+(48, 9, 1, 9, 29.00);
+
+--
+-- Triggers `orders`
+--
+DELIMITER $$
+CREATE TRIGGER `calculateSubtotal` BEFORE INSERT ON `orders` FOR EACH ROW BEGIN
+  DECLARE product_price DECIMAL(10, 2);
+  -- Get the price of the product
+  SELECT price INTO product_price FROM products WHERE product_id = NEW.product_id;
+  -- Calculate the Subtotal
+  SET NEW.Subtotal = NEW.quantity * product_price;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -109,6 +143,15 @@ CREATE TABLE `products` (
   `quantity` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`product_id`, `name`, `description`, `quantity`, `price`) VALUES
+(9, 'popberry pie', 'yum', 118, 29.00),
+(10, 'scarrot wine', 'dizzyy', 122, 234.00),
+(11, 'popberry', 'fruit', 118, 222.00);
 
 -- --------------------------------------------------------
 
@@ -199,19 +242,19 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `orders_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `orders_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `transaction`
