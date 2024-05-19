@@ -201,10 +201,50 @@ session_start();
 
           <!-- Cart Section -->
           <div class="container" id="cart-items">
-            <h2>Cart</h2>
-            <ul class="list-group" id="cart-list">
-              <!-- Cart items will be dynamically added here -->
-            </ul>
+            <h2>Orders</h2>
+
+
+            <table class="table table-hover table-striped">
+              <thead>
+                <tr>
+                  <th>Quantity</th>
+                  <th>Subtotal</th>
+                  <th>Product Name</th>
+                  <th>Product Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+
+                $connector = new connector();
+                $sql = "CALL joinedOrdersAndProducts(?)";
+                $stmt = $connector->conn->prepare($sql);
+                $stmt->bind_param("i", $_SESSION["customer_id"]);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $row['name'] . "</td>";
+                    echo "<td>" . $row['price'] . "</td>";
+                    echo "<td>" . $row['quantity'] . "</td>";
+                    echo "<td>" . $row['Subtotal'] . "</td>";
+
+                    echo "</tr>";
+                  }
+                } else {
+                  echo "<tr><td class=\"text-center\" colspan='4'>No orders found</td></tr>";
+                }
+                $stmt->close();
+                $connector->conn->close();
+                ?>
+              </tbody>
+            </table>
+
+
+
+
           </div>
         </div>
       </div>
