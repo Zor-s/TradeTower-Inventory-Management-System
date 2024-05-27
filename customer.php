@@ -90,7 +90,8 @@ session_start();
           <a class="nav-link" href="#">About</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Contact</a>
+          <a class="nav-link" href="#"><button type="button" class="btn btn-danger" id="logoutButton">Log Out</button>
+          </a>
         </li>
       </ul>
     </div>
@@ -207,10 +208,10 @@ session_start();
             <table class="table table-hover table-striped">
               <thead>
                 <tr>
-                  <th>Quantity</th>
-                  <th>Subtotal</th>
                   <th>Product Name</th>
                   <th>Product Price</th>
+                  <th>Quantity</th>
+                  <th>Subtotal</th>
                 </tr>
               </thead>
               <tbody>
@@ -382,6 +383,29 @@ session_start();
       // Print the values
       // console.log(productID + values);
     }
+
+
+
+    document.getElementById('logoutButton').addEventListener('click', function() {
+
+
+
+      $.ajax({
+        type: "POST",
+        url: "logout.php", // The PHP file that will handle the session deletion
+        success: function(response) {
+          // Handle the response from the server
+          console.log("Session deleted:", response);
+        },
+        error: function(xhr, status, error) {
+          // Handle any errors that occurred during the request
+          console.log("Error:", error);
+        }
+      });
+
+
+      window.location.href = 'login.php';
+    });
   </script>
 </body>
 

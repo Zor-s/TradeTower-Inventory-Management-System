@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2024 at 05:57 PM
+-- Generation Time: May 27, 2024 at 03:53 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -76,18 +76,6 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admin`
---
-
-CREATE TABLE `admin` (
-  `admin_id` int(11) NOT NULL,
-  `username` varchar(50) DEFAULT NULL,
-  `password` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `customers`
 --
 
@@ -105,7 +93,9 @@ CREATE TABLE `customers` (
 
 INSERT INTO `customers` (`customer_id`, `name`, `email`, `username`, `password`) VALUES
 (9, 'asd', 'asd@asd.asd', 'asd', '$2y$10$EXUuONs5pmBaLInepxuH3ORXImOegRB8CZfB9I9GZP1IUTxQAn60W'),
-(10, 'asds', 'asd@asd.asd', 'asd', '$2y$10$EXUuONs5pmBaLInepxuH3ORXImOegRB8CZfB9I9GZP1IUTxQAn60W');
+(10, 'asds', 'asd@asd.asd', 'asd', '$2y$10$EXUuONs5pmBaLInepxuH3ORXImOegRB8CZfB9I9GZP1IUTxQAn60W'),
+(11, 'Zoren', 'drzors@gmail.com', 'Zoren', '$2y$10$wHsEy2bHDTJT3Ow0v871HO9nPw/j22xIIg1rkOgdr5OvDQFDlLxLe'),
+(12, 'asd', 'Drzoren@gmail.com', 'asd', '$2y$10$IYz/Qf52m1ocdue5q5qgCeqFs.AzjH4pMejBt2480yDbBCoU.5Isi');
 
 -- --------------------------------------------------------
 
@@ -126,11 +116,17 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`orders_id`, `customer_id`, `quantity`, `product_id`, `Subtotal`) VALUES
-(44, 9, 1, 9, 0.00),
-(45, 10, 1, 10, 0.00),
-(46, 9, 1, 11, 0.00),
-(47, 9, 3, 9, 87.00),
-(48, 9, 1, 9, 29.00);
+(50, 9, 1, 9, 29.00),
+(51, 9, 2, 10, 468.00),
+(52, 11, 2, 9, 58.00),
+(53, 11, 1, 9, 29.00),
+(54, 11, 1, 10, 234.00),
+(55, 11, 1, 11, 222.00),
+(56, 10, 3, 9, 87.00),
+(57, 10, 1, 9, 29.00),
+(58, 10, 2, 9, 58.00),
+(59, 12, 1, 9, 29.00),
+(60, 12, 1, 9, 29.00);
 
 --
 -- Triggers `orders`
@@ -165,23 +161,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`product_id`, `name`, `description`, `quantity`, `price`) VALUES
-(9, 'popberry pie', 'yum', 118, 29.00),
-(10, 'scarrot wine', 'dizzyy', 122, 234.00),
-(11, 'popberry', 'fruit', 118, 222.00);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `transaction`
---
-
-CREATE TABLE `transaction` (
-  `transaction_id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL,
-  `total_price` decimal(10,0) NOT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `orders_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+(9, 'popberry pie', 'yum yum', 103, 29.00),
+(10, 'scarrot wine', 'dizzyy', 119, 234.00),
+(11, 'popberry', 'berry', 117, 222.00);
 
 -- --------------------------------------------------------
 
@@ -211,12 +193,6 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 
 --
--- Indexes for table `admin`
---
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`admin_id`);
-
---
 -- Indexes for table `customers`
 --
 ALTER TABLE `customers`
@@ -234,49 +210,33 @@ ALTER TABLE `orders`
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`product_id`);
-
---
--- Indexes for table `transaction`
---
-ALTER TABLE `transaction`
-  ADD PRIMARY KEY (`transaction_id`),
-  ADD KEY `customer_id` (`customer_id`),
-  ADD KEY `orders_id` (`orders_id`);
+  ADD PRIMARY KEY (`product_id`),
+  ADD KEY `idx_name` (`name`),
+  ADD KEY `idx_description` (`description`(768)),
+  ADD KEY `idx_quantity` (`quantity`),
+  ADD KEY `idx_price` (`price`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `admin`
---
-ALTER TABLE `admin`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `orders_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `orders_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `transaction`
---
-ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
@@ -288,13 +248,6 @@ ALTER TABLE `transaction`
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
   ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
-
---
--- Constraints for table `transaction`
---
-ALTER TABLE `transaction`
-  ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
-  ADD CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`orders_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
