@@ -148,7 +148,7 @@ $connector->conn->close();
                     </form>
 
                     <p class="text-center">
-                        Not a Member? <a href="signup.html">Signup Here</a>
+                        Not a Member? <a href="./signup.php">Signup Here</a>
                     </p>
                 </div>
             </div>

@@ -143,7 +143,7 @@ $connector->conn->close();
                         By clicking Sign Up Now, you agree to our <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>
                     </p>
                     <p class="text-center">
-                        Already have an account? <a href="login.html">Login here</a>
+                        Already have an account? <a href="./login.php">Login here</a>
                     </p>
                 </form>
             </div>
